@@ -1,4 +1,4 @@
-# 🧪 BBC Live Experience — Experiment Bookmarklet
+# 🧪 BBC — Experiment Bookmarklet
 
 A browser bookmarklet for overriding MVT experiment variants on BBC web pages via the `?experiments=name:variant` query parameter — without having to remember experiment names or type them manually.
 
