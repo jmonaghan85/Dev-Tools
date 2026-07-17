@@ -1,8 +1,10 @@
-# 🔧 BBC Live Experience — Toggle Bookmarklet
+# 🔧 BBC — Toggle Bookmarklet
 
 A browser bookmarklet for overriding feature toggle values on BBC web pages via the `?toggles=name:true,name:false` query parameter.
 
 👉 **[Open the installer page](https://jmonaghan85.github.io/Dev-Tools/toggles.html)**
+
+** This has been made utilising Aii agents and is in a public repo **
 
 ---
 
@@ -32,7 +34,7 @@ A popup will appear with:
 
 If toggles are already active on the page, they're shown in a green banner at the top and their checkboxes are pre-checked.
 
-### Managing toggles
+### Managing toggles and adding new toggles
 
 Click **⚙️ Manage toggles** at the bottom of the popup to:
 
