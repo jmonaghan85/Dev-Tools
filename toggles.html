@@ -1,231 +1,398 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BBC Web — Toggle Bookmarklet</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f6f9; color: #1a1a1a; padding: 40px 20px; }
-    .container { max-width: 720px; margin: 0 auto; }
-    h1 { font-size: 24px; margin-bottom: 8px; }
-    .subtitle { color: #666; margin-bottom: 32px; font-size: 15px; }
-    code { background: #eef; padding: 1px 4px; border-radius: 3px; font-size: 13px; }
-    .card { background: #fff; border-radius: 10px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
-    .card h2 { font-size: 17px; margin-bottom: 10px; }
-    .card p { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 10px; }
-    #bookmarklet-link { display: inline-block; padding: 12px 20px; background: #0062cc; color: #fff; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 15px; cursor: move; user-select: none; margin: 8px 0; }
-    #bookmarklet-link:hover { background: #004da0; }
-    .tip { font-size: 13px; color: #888; margin-top: 8px; }
-    .toggle-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; font-family: monospace; color: #333; }
-    .toggle-row span { flex: 1; }
-    .delete-btn { background: none; border: none; cursor: pointer; color: #ccc; font-size: 18px; line-height: 1; padding: 0 4px; }
-    .delete-btn:hover { color: #dc3545; }
-    .empty-hint { font-size: 13px; color: #bbb; font-style: italic; padding: 8px 0; }
-    .add-row { display: flex; gap: 8px; margin-top: 14px; }
-    .add-row input { flex: 1; padding: 8px 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; font-family: monospace; }
-    .add-row button { padding: 8px 16px; background: #28a745; color: #fff; border: none; border-radius: 5px; font-size: 13px; font-weight: 600; cursor: pointer; }
-    .add-row button:hover { background: #218838; }
-    .regen-notice { font-size: 12px; color: #888; margin-top: 16px; padding-top: 16px; border-top: 1px solid #eee; }
-    .regen-btn { background: none; border: 1px solid #ccc; border-radius: 4px; padding: 4px 10px; font-size: 12px; cursor: pointer; margin-left: 8px; }
-    .regen-btn:hover { background: #f0f0f0; }
-  </style>
-</head>
-<body>
-<div class="container">
-  <h1>🔧 Toggle Bookmarklet</h1>
-  <p class="subtitle">Override feature toggle values on BBC web pages via <code>?toggles=name:true,name:false</code>.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BBC Web — Toggle Bookmarklet</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f4f6f9;
+        color: #1a1a1a;
+        padding: 40px 20px;
+      }
+      .container {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+      .subtitle {
+        color: #666;
+        margin-bottom: 32px;
+        font-size: 15px;
+      }
+      code {
+        background: #eef;
+        padding: 1px 4px;
+        border-radius: 3px;
+        font-size: 13px;
+      }
+      .card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      }
+      .card h2 {
+        font-size: 17px;
+        margin-bottom: 10px;
+      }
+      .card p {
+        font-size: 14px;
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 10px;
+      }
+      #bookmarklet-link {
+        display: inline-block;
+        padding: 12px 20px;
+        background: #0062cc;
+        color: #fff;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: move;
+        user-select: none;
+        margin: 8px 0;
+      }
+      #bookmarklet-link:hover {
+        background: #004da0;
+      }
+      .tip {
+        font-size: 13px;
+        color: #888;
+        margin-top: 8px;
+      }
+      .toggle-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 13px;
+        font-family: monospace;
+        color: #333;
+      }
+      .toggle-row span {
+        flex: 1;
+      }
+      .delete-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #ccc;
+        font-size: 18px;
+        line-height: 1;
+        padding: 0 4px;
+      }
+      .delete-btn:hover {
+        color: #dc3545;
+      }
+      .empty-hint {
+        font-size: 13px;
+        color: #bbb;
+        font-style: italic;
+        padding: 8px 0;
+      }
+      .add-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .add-row input {
+        flex: 1;
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 13px;
+        font-family: monospace;
+      }
+      .add-row button {
+        padding: 8px 16px;
+        background: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .add-row button:hover {
+        background: #218838;
+      }
+      .regen-notice {
+        font-size: 12px;
+        color: #888;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #eee;
+      }
+      .regen-btn {
+        background: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 4px 10px;
+        font-size: 12px;
+        cursor: pointer;
+        margin-left: 8px;
+      }
+      .regen-btn:hover {
+        background: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔧 Toggle Bookmarklet</h1>
+      <p class="subtitle">
+        Override feature toggle values on BBC web pages via
+        <code>?toggles=name:true,name:false</code>.
+      </p>
 
-  <div class="card">
-    <h2>Installation</h2>
-    <p>Add your toggle names below, then drag the button into your bookmarks bar. If your bookmarks bar isn't visible press <strong>Cmd+Shift+B</strong> (Mac) / <strong>Ctrl+Shift+B</strong> (Windows).</p>
-    <a id="bookmarklet-link" href="#">🔧 BBC Toggles</a>
-    <p class="tip">Drag to your bookmarks bar ↑ &nbsp;|&nbsp; Toggle names are baked into the link so they work on any domain.</p>
-  </div>
+      <div class="card">
+        <h2>Installation</h2>
+        <p>
+          Add your toggle names below, then drag the button into your bookmarks
+          bar. If your bookmarks bar isn't visible press
+          <strong>Cmd+Shift+B</strong> (Mac) /
+          <strong>Ctrl+Shift+B</strong> (Windows).
+        </p>
+        <a id="bookmarklet-link" href="#">🔧 BBC Toggles</a>
+        <p class="tip">
+          Drag to your bookmarks bar ↑ &nbsp;|&nbsp; Toggle names are baked into
+          the link so they work on any domain.
+        </p>
+      </div>
 
-  <div class="card">
-    <h2>Your Toggle Names</h2>
-    <p>These are baked into the bookmarklet link — <strong>not stored in the public GitHub repo</strong>, only in this page's local storage and your bookmark.</p>
+      <div class="card">
+        <h2>Your Toggle Names</h2>
+        <p>
+          These are baked into the bookmarklet link —
+          <strong>not stored in the public GitHub repo</strong>, only in this
+          page's local storage and your bookmark.
+        </p>
 
-    <div id="toggle-list"></div>
+        <div id="toggle-list"></div>
 
-    <div class="add-row">
-      <input id="new-toggle-input" type="text" placeholder="e.g. my_feature_toggle" spellcheck="false">
-      <button onclick="addToggle()">+ Add</button>
+        <div class="add-row">
+          <input
+            id="new-toggle-input"
+            type="text"
+            placeholder="e.g. my_feature_toggle"
+            spellcheck="false"
+          />
+          <button onclick="addToggle()">+ Add</button>
+        </div>
+
+        <p class="regen-notice">
+          After adding names, regenerate the bookmarklet link and re-drag it:
+          <button class="regen-btn" onclick="regenerate()">
+            ↻ Regenerate link
+          </button>
+        </p>
+      </div>
     </div>
 
-    <p class="regen-notice">
-      After adding names, regenerate the bookmarklet link and re-drag it:
-      <button class="regen-btn" onclick="regenerate()">↻ Regenerate link</button>
-    </p>
-  </div>
-</div>
+    <script>
+      var STORAGE_KEY = "__toggle_bookmarklet_page__";
+      function load() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        } catch (e) {
+          return [];
+        }
+      }
+      function save(arr) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+      }
 
-<script>
-  var STORAGE_KEY = '__toggle_bookmarklet_page__';
-  function load() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; } }
-  function save(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+      function renderList() {
+        var list = document.getElementById("toggle-list");
+        list.innerHTML = "";
+        var names = load();
+        if (!names.length) {
+          var hint = document.createElement("p");
+          hint.className = "empty-hint";
+          hint.textContent = "No toggle names added yet.";
+          list.appendChild(hint);
+          return;
+        }
+        names.forEach(function (name, i) {
+          var row = document.createElement("div");
+          row.className = "toggle-row";
+          var span = document.createElement("span");
+          span.textContent = name;
+          var del = document.createElement("button");
+          del.className = "delete-btn";
+          del.textContent = "\u00d7";
+          del.onclick = (function (idx) {
+            return function () {
+              var arr = load();
+              arr.splice(idx, 1);
+              save(arr);
+              renderList();
+              regenerate();
+            };
+          })(i);
+          row.appendChild(span);
+          row.appendChild(del);
+          list.appendChild(row);
+        });
+      }
 
-  function renderList() {
-    var list = document.getElementById('toggle-list');
-    list.innerHTML = '';
-    var names = load();
-    if (!names.length) {
-      var hint = document.createElement('p');
-      hint.className = 'empty-hint';
-      hint.textContent = 'No toggle names added yet.';
-      list.appendChild(hint);
-      return;
-    }
-    names.forEach(function(name, i) {
-      var row = document.createElement('div');
-      row.className = 'toggle-row';
-      var span = document.createElement('span');
-      span.textContent = name;
-      var del = document.createElement('button');
-      del.className = 'delete-btn';
-      del.textContent = '\u00d7';
-      del.onclick = (function(idx) { return function() {
-        var arr = load(); arr.splice(idx, 1); save(arr); renderList(); regenerate();
-      }; })(i);
-      row.appendChild(span);
-      row.appendChild(del);
-      list.appendChild(row);
-    });
-  }
+      function addToggle() {
+        var input = document.getElementById("new-toggle-input");
+        var name = input.value.trim();
+        if (!name) return;
+        var arr = load();
+        if (!arr.includes(name)) arr.push(name);
+        save(arr);
+        input.value = "";
+        renderList();
+        regenerate();
+      }
 
-  function addToggle() {
-    var input = document.getElementById('new-toggle-input');
-    var name = input.value.trim();
-    if (!name) return;
-    var arr = load();
-    if (!arr.includes(name)) arr.push(name);
-    save(arr);
-    input.value = '';
-    renderList();
-    regenerate();
-  }
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("new-toggle-input")
+          .addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              addToggle();
+            }
+          });
+      });
 
-  document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('new-toggle-input').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { e.preventDefault(); addToggle(); }
-    });
-  });
-
-  function buildBookmarklet(names) {
-    var namesJson = JSON.stringify(names);
-    var src = [
-      '(function(){',
-        'var ex=document.getElementById("__tgl_bm__");if(ex){ex.remove();return;}',
-        'var D=',namesJson,';',
-        'try{var extra=JSON.parse(localStorage.getItem("__toggle_bookmarklet__")||"[]");extra.forEach(function(n){if(!D.includes(n))D.push(n);});}catch(e){}',
-        'function mk(tag,css){var e=document.createElement(tag);if(css)e.style.cssText=css;return e;}',
-        'function lbl(t){var l=mk("label","display:block;font-size:11px;font-weight:700;color:#666;margin-bottom:6px;margin-top:14px;text-transform:uppercase;letter-spacing:.05em");l.textContent=t;return l;}',
-        'var inpCss="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:5px;font-size:14px;box-sizing:border-box;background:#fff";',
-        'function btn(t,bg,fg,extra){var b=mk("button","flex:1;padding:10px 6px;background:"+bg+";color:"+fg+";border:none;border-radius:5px;font-size:13px;font-weight:700;cursor:pointer"+(extra?";"+extra:""));b.textContent=t;return b;}',
-        'function loadExtra(){try{return JSON.parse(localStorage.getItem("__toggle_bookmarklet__")||"[]");}catch(e){return[];}}',
-        'function saveExtra(a){try{localStorage.setItem("__toggle_bookmarklet__",JSON.stringify(a));}catch(e){}}',
-        'var u=new URL(window.location.href),cur=u.searchParams.get("toggles")||"",activeMap={};',
-        'if(cur){cur.split(",").forEach(function(t){var p=t.split(":");if(p[0].trim())activeMap[p[0].trim()]=p[1]?p[1].trim():"true";});}',
-        'Object.keys(activeMap).forEach(function(n){if(!D.includes(n))D.push(n);});',
-        'var ov=mk("div","position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:2147483647;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif");',
-        'ov.id="__tgl_bm__";',
-        'var md=mk("div","background:#fff;border-radius:10px;padding:24px;width:460px;max-width:92vw;box-shadow:0 8px 32px rgba(0,0,0,.25);color:#1a1a1a;max-height:90vh;overflow-y:auto");',
-        'var hd=mk("div","display:flex;align-items:center;justify-content:space-between;margin-bottom:16px");',
-        'var ti=mk("h2","margin:0;font-size:17px;font-weight:700");ti.textContent="\uD83D\uDD27 Toggle Override";',
-        'var cl=mk("button","background:none;border:none;font-size:20px;cursor:pointer;color:#888;line-height:1;padding:0 4px");cl.textContent="\u2715";cl.onclick=function(){ov.remove();};',
-        'hd.appendChild(ti);hd.appendChild(cl);',
-        'var p1=mk("div");',
-        'if(cur){var sb=mk("div","background:#f0fff4;border:1px solid #b3e6c8;border-radius:4px;padding:7px 12px;margin-bottom:14px;font-size:12px;color:#1a6b3a;word-break:break-all");sb.innerHTML="<strong>Active:</strong> "+cur;p1.appendChild(sb);}',
-        'var srch=mk("input",inpCss+";margin-top:0");srch.placeholder="Search toggles\u2026";srch.spellcheck=false;',
-        'var listDiv=mk("div","margin-top:10px;max-height:260px;overflow-y:auto");',
-        'var rowCss="display:flex;align-items:center;gap:10px;padding:7px 4px;border-bottom:1px solid #f5f5f5";',
-        'var selCss="padding:5px 8px;border:1px solid #ccc;border-radius:4px;font-size:13px;background:#fff;cursor:pointer";',
-        'function renderList(filter){',
+      function buildBookmarklet(names) {
+        var namesJson = JSON.stringify(names);
+        var src = [
+          "(function(){",
+          'var ex=document.getElementById("__tgl_bm__");if(ex){ex.remove();return;}',
+          "var D=",
+          namesJson,
+          ";",
+          'function _ckD(){var h=window.location.hostname,p=h.split("."),n=p.length;if(n<2)return h;if(/\.(co|org|net|gov|edu|com)\.(uk|au|nz|jp|za|br|in|il|hk)$/.test(h)&&n>=4)return"."+p.slice(-3).join(".");return"."+p.slice(-2).join(".");}',
+          'function _ckR(){try{var m=document.cookie.match(/(^|; )__toggle_bookmarklet__=([^;]*)/);if(m)return JSON.parse(decodeURIComponent(m[2]));var ls=localStorage.getItem("__toggle_bookmarklet__");return ls?JSON.parse(ls):null;}catch(e){return null;}}',
+          'function _ckW(a){try{var s=JSON.stringify(a);document.cookie="__toggle_bookmarklet__="+encodeURIComponent(s)+"; domain="+_ckD()+"; path=/; max-age=31536000; SameSite=Lax";localStorage.setItem("__toggle_bookmarklet__",s);}catch(e){}}',
+          "try{var extra=_ckR();if(extra){_ckW(extra);extra.forEach(function(n){if(!D.includes(n))D.push(n);});}}catch(e){}",
+          "function mk(tag,css){var e=document.createElement(tag);if(css)e.style.cssText=css;return e;}",
+          'function lbl(t){var l=mk("label","display:block;font-size:11px;font-weight:700;color:#666;margin-bottom:6px;margin-top:14px;text-transform:uppercase;letter-spacing:.05em");l.textContent=t;return l;}',
+          'var inpCss="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:5px;font-size:14px;box-sizing:border-box;background:#fff";',
+          'function btn(t,bg,fg,extra){var b=mk("button","flex:1;padding:10px 6px;background:"+bg+";color:"+fg+";border:none;border-radius:5px;font-size:13px;font-weight:700;cursor:pointer"+(extra?";"+extra:""));b.textContent=t;return b;}',
+          "function loadExtra(){return _ckR()||[];}",
+          "function saveExtra(a){_ckW(a);}",
+          'var u=new URL(window.location.href),cur=u.searchParams.get("toggles")||"",activeMap={};',
+          'if(cur){cur.split(",").forEach(function(t){var p=t.split(":");if(p[0].trim())activeMap[p[0].trim()]=p[1]?p[1].trim():"true";});}',
+          "Object.keys(activeMap).forEach(function(n){if(!D.includes(n))D.push(n);});",
+          'var ov=mk("div","position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:2147483647;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif");',
+          'ov.id="__tgl_bm__";',
+          'var md=mk("div","background:#fff;border-radius:10px;padding:24px;width:460px;max-width:92vw;box-shadow:0 8px 32px rgba(0,0,0,.25);color:#1a1a1a;max-height:90vh;overflow-y:auto");',
+          'var hd=mk("div","display:flex;align-items:center;justify-content:space-between;margin-bottom:16px");',
+          'var ti=mk("h2","margin:0;font-size:17px;font-weight:700");ti.textContent="\uD83D\uDD27 Toggle Override";',
+          'var cl=mk("button","background:none;border:none;font-size:20px;cursor:pointer;color:#888;line-height:1;padding:0 4px");cl.textContent="\u2715";cl.onclick=function(){ov.remove();};',
+          "hd.appendChild(ti);hd.appendChild(cl);",
+          'var p1=mk("div");',
+          'if(cur){var sb=mk("div","background:#f0fff4;border:1px solid #b3e6c8;border-radius:4px;padding:7px 12px;margin-bottom:14px;font-size:12px;color:#1a6b3a;word-break:break-all");sb.innerHTML="<strong>Active:</strong> "+cur;p1.appendChild(sb);}',
+          'var srch=mk("input",inpCss+";margin-top:0");srch.placeholder="Search toggles\u2026";srch.spellcheck=false;',
+          'var listDiv=mk("div","margin-top:10px;max-height:260px;overflow-y:auto");',
+          'var rowCss="display:flex;align-items:center;gap:10px;padding:7px 4px;border-bottom:1px solid #f5f5f5";',
+          'var selCss="padding:5px 8px;border:1px solid #ccc;border-radius:4px;font-size:13px;background:#fff;cursor:pointer";',
+          "function renderList(filter){",
           'listDiv.innerHTML="";',
-          'var f=(filter!==undefined?filter:srch.value).toLowerCase();',
-          'var visible=D.filter(function(n){return !f||n.toLowerCase().indexOf(f)>-1;});',
+          "var f=(filter!==undefined?filter:srch.value).toLowerCase();",
+          "var visible=D.filter(function(n){return !f||n.toLowerCase().indexOf(f)>-1;});",
           'if(!visible.length){var em=mk("div","font-size:13px;color:#aaa;padding:12px 4px;font-style:italic");em.textContent=D.length?"No matches.":"No toggles in list.";listDiv.appendChild(em);return;}',
-          'visible.forEach(function(n){',
-            'var row=mk("div",rowCss);',
-            'var cb=mk("input");cb.type="checkbox";cb.style.cssText="width:16px;height:16px;cursor:pointer;flex-shrink:0";cb.checked=!!activeMap[n];',
-            'var nm=mk("span","flex:1;font-size:13px;font-family:monospace;color:#333;word-break:break-all;cursor:pointer");nm.textContent=n;nm.onclick=function(){cb.checked=!cb.checked;};',
-            'var sel=mk("select",selCss);',
-            'var optT=document.createElement("option");optT.value="true";optT.textContent="true";',
-            'var optF=document.createElement("option");optF.value="false";optF.textContent="false";',
-            'sel.appendChild(optT);sel.appendChild(optF);sel.value=activeMap[n]==="false"?"false":"true";',
-            'row.appendChild(cb);row.appendChild(nm);row.appendChild(sel);listDiv.appendChild(row);',
-          '});',
-        '}',
-        'srch.oninput=function(){renderList(srch.value);};',
-        'renderList();',
-        'var br=mk("div","display:flex;gap:8px;margin-top:18px");',
-        'var aB=btn("Apply","#0062cc","#fff");',
-        'aB.onclick=function(){',
-          'var parts=[];',
+          "visible.forEach(function(n){",
+          'var row=mk("div",rowCss);',
+          'var cb=mk("input");cb.type="checkbox";cb.style.cssText="width:16px;height:16px;cursor:pointer;flex-shrink:0";cb.checked=!!activeMap[n];',
+          'var nm=mk("span","flex:1;font-size:13px;font-family:monospace;color:#333;word-break:break-all;cursor:pointer");nm.textContent=n;nm.onclick=function(){cb.checked=!cb.checked;};',
+          'var sel=mk("select",selCss);',
+          'var optT=document.createElement("option");optT.value="true";optT.textContent="true";',
+          'var optF=document.createElement("option");optF.value="false";optF.textContent="false";',
+          'sel.appendChild(optT);sel.appendChild(optF);sel.value=activeMap[n]==="false"?"false":"true";',
+          "row.appendChild(cb);row.appendChild(nm);row.appendChild(sel);listDiv.appendChild(row);",
+          "});",
+          "}",
+          "srch.oninput=function(){renderList(srch.value);};",
+          "renderList();",
+          'var br=mk("div","display:flex;gap:8px;margin-top:18px");',
+          'var aB=btn("Apply","#0062cc","#fff");',
+          "aB.onclick=function(){",
+          "var parts=[];",
           'listDiv.querySelectorAll("div").forEach(function(row){var cb=row.querySelector("input[type=checkbox]");var nm=row.querySelector("span");var sel=row.querySelector("select");if(cb&&cb.checked&&nm&&sel)parts.push(nm.textContent+":"+sel.value);});',
           'if(!parts.length){alert("Check at least one toggle to apply.");return;}',
           'var u2=new URL(window.location.href);u2.searchParams.set("toggles",parts.join(","));window.location.href=u2.toString();',
-        '};',
-        'var rB=btn("Remove","#dc3545","#fff");rB.onclick=function(){var u2=new URL(window.location.href);u2.searchParams.delete("toggles");window.location.href=u2.toString();};',
-        'var xB=btn("Close","#f1f3f5","#333","border:1px solid #ddd");xB.onclick=function(){ov.remove();};',
-        'br.appendChild(aB);br.appendChild(rB);br.appendChild(xB);',
-        'var mLink=mk("div","margin-top:14px;text-align:center;border-top:1px solid #f0f0f0;padding-top:12px");',
-        'var mA=mk("a","font-size:12px;color:#0062cc;cursor:pointer;text-decoration:none");mA.textContent="\u2699\uFE0F Manage toggles";mLink.appendChild(mA);',
-        'p1.appendChild(lbl("Toggles"));p1.appendChild(srch);p1.appendChild(listDiv);p1.appendChild(br);p1.appendChild(mLink);',
-        'var p2=mk("div","display:none");',
-        'var backRow=mk("div","margin-bottom:16px");',
-        'var backA=mk("a","font-size:13px;color:#0062cc;cursor:pointer;text-decoration:none");backA.textContent="\u2190 Back";backRow.appendChild(backA);',
-        'var savedList=mk("div","max-height:220px;overflow-y:auto;margin-bottom:4px");',
-        'function renderManageList(){',
+          "};",
+          'var rB=btn("Remove","#dc3545","#fff");rB.onclick=function(){var u2=new URL(window.location.href);u2.searchParams.delete("toggles");window.location.href=u2.toString();};',
+          'var xB=btn("Close","#f1f3f5","#333","border:1px solid #ddd");xB.onclick=function(){ov.remove();};',
+          "br.appendChild(aB);br.appendChild(rB);br.appendChild(xB);",
+          'var mLink=mk("div","margin-top:14px;text-align:center;border-top:1px solid #f0f0f0;padding-top:12px");',
+          'var mA=mk("a","font-size:12px;color:#0062cc;cursor:pointer;text-decoration:none");mA.textContent="\u2699\uFE0F Manage toggles";mLink.appendChild(mA);',
+          'p1.appendChild(lbl("Toggles"));p1.appendChild(srch);p1.appendChild(listDiv);p1.appendChild(br);p1.appendChild(mLink);',
+          'var p2=mk("div","display:none");',
+          'var backRow=mk("div","margin-bottom:16px");',
+          'var backA=mk("a","font-size:13px;color:#0062cc;cursor:pointer;text-decoration:none");backA.textContent="\u2190 Back";backRow.appendChild(backA);',
+          'var savedList=mk("div","max-height:220px;overflow-y:auto;margin-bottom:4px");',
+          "function renderManageList(){",
           'savedList.innerHTML="";',
           'if(!D.length){var em=mk("div","font-size:13px;color:#aaa;padding:8px 0;font-style:italic");em.textContent="No toggles in list.";savedList.appendChild(em);return;}',
-          'D.forEach(function(n,i){',
-            'var row=mk("div","display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f5f5f5");',
-            'var nm=mk("span","flex:1;font-size:12px;font-family:monospace;color:#333;word-break:break-all");nm.textContent=n;',
-            'var dBtn=mk("button","background:none;border:none;cursor:pointer;color:#ddd;font-size:18px;line-height:1;padding:0 2px;flex-shrink:0");dBtn.textContent="\u00d7";dBtn.title="Remove";',
-            'dBtn.onmouseover=function(){this.style.color="#dc3545";};dBtn.onmouseout=function(){this.style.color="#ddd";};',
-            'dBtn.onclick=(function(idx){return function(){',
-              'var name=D[idx];D.splice(idx,1);',
-              'var ex=loadExtra();var ei=ex.indexOf(name);if(ei>-1){ex.splice(ei,1);saveExtra(ex);}',
-              'renderManageList();renderList("");',
-            '}})(i);',
-            'row.appendChild(nm);row.appendChild(dBtn);savedList.appendChild(row);',
-          '});',
-        '}',
-        'var div2=mk("div","border-top:2px solid #f0f0f0;margin:16px 0");',
-        'var nI=mk("input",inpCss+";display:block;margin-top:6px");nI.placeholder="e.g. my_feature_toggle";nI.spellcheck=false;',
-        'var saveBtn=btn("Add Toggle","#28a745","#fff");',
-        'var p2br=mk("div","display:flex;gap:8px;margin-top:14px");p2br.appendChild(saveBtn);',
-        'saveBtn.onclick=function(){',
+          "D.forEach(function(n,i){",
+          'var row=mk("div","display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f5f5f5");',
+          'var nm=mk("span","flex:1;font-size:12px;font-family:monospace;color:#333;word-break:break-all");nm.textContent=n;',
+          'var dBtn=mk("button","background:none;border:none;cursor:pointer;color:#ddd;font-size:18px;line-height:1;padding:0 2px;flex-shrink:0");dBtn.textContent="\u00d7";dBtn.title="Remove";',
+          'dBtn.onmouseover=function(){this.style.color="#dc3545";};dBtn.onmouseout=function(){this.style.color="#ddd";};',
+          "dBtn.onclick=(function(idx){return function(){",
+          "var name=D[idx];D.splice(idx,1);",
+          "var ex=loadExtra();var ei=ex.indexOf(name);if(ei>-1){ex.splice(ei,1);saveExtra(ex);}",
+          'renderManageList();renderList("");',
+          "}})(i);",
+          "row.appendChild(nm);row.appendChild(dBtn);savedList.appendChild(row);",
+          "});",
+          "}",
+          'var div2=mk("div","border-top:2px solid #f0f0f0;margin:16px 0");',
+          'var nI=mk("input",inpCss+";display:block;margin-top:6px");nI.placeholder="e.g. my_feature_toggle";nI.spellcheck=false;',
+          'var saveBtn=btn("Add Toggle","#28a745","#fff");',
+          'var p2br=mk("div","display:flex;gap:8px;margin-top:14px");p2br.appendChild(saveBtn);',
+          "saveBtn.onclick=function(){",
           'var name=nI.value.trim();if(!name){alert("Enter a toggle name.");return;}',
-          'if(!D.includes(name)){D.push(name);var ex=loadExtra();if(!ex.includes(name)){ex.push(name);saveExtra(ex);}}',
+          "if(!D.includes(name)){D.push(name);var ex=loadExtra();if(!ex.includes(name)){ex.push(name);saveExtra(ex);}}",
           'nI.value="";renderManageList();renderList("");',
-        '};',
-        'nI.onkeydown=function(e){if(e.key==="Enter"){e.preventDefault();saveBtn.click();}};',
-        'p2.appendChild(backRow);p2.appendChild(lbl("All Toggles"));p2.appendChild(savedList);',
-        'p2.appendChild(div2);p2.appendChild(lbl("Add Toggle"));p2.appendChild(nI);p2.appendChild(p2br);',
-        'mA.onclick=function(){p1.style.display="none";p2.style.display="block";ti.textContent="\uD83D\uDD27 Manage Toggles";renderManageList();nI.focus();};',
-        'backA.onclick=function(){p2.style.display="none";p1.style.display="block";ti.textContent="\uD83D\uDD27 Toggle Override";srch.value="";renderList("");};',
-        'md.appendChild(hd);md.appendChild(p1);md.appendChild(p2);',
-        'ov.appendChild(md);ov.onclick=function(ev){if(ev.target===ov)ov.remove();};',
-        'document.body.appendChild(ov);',
-      '})()'
-    ].join('');
-    return 'javascript:' + encodeURIComponent(src);
-  }
+          "};",
+          'nI.onkeydown=function(e){if(e.key==="Enter"){e.preventDefault();saveBtn.click();}};',
+          'p2.appendChild(backRow);p2.appendChild(lbl("All Toggles"));p2.appendChild(savedList);',
+          'p2.appendChild(div2);p2.appendChild(lbl("Add Toggle"));p2.appendChild(nI);p2.appendChild(p2br);',
+          'mA.onclick=function(){p1.style.display="none";p2.style.display="block";ti.textContent="\uD83D\uDD27 Manage Toggles";renderManageList();nI.focus();};',
+          'backA.onclick=function(){p2.style.display="none";p1.style.display="block";ti.textContent="\uD83D\uDD27 Toggle Override";srch.value="";renderList("");};',
+          "md.appendChild(hd);md.appendChild(p1);md.appendChild(p2);",
+          "ov.appendChild(md);ov.onclick=function(ev){if(ev.target===ov)ov.remove();};",
+          "document.body.appendChild(ov);",
+          "})()",
+        ].join("");
+        return "javascript:" + encodeURIComponent(src);
+      }
 
-  function regenerate() {
-    document.getElementById('bookmarklet-link').href = buildBookmarklet(load());
-  }
+      function regenerate() {
+        document.getElementById("bookmarklet-link").href =
+          buildBookmarklet(load());
+      }
 
-  renderList();
-  regenerate();
+      renderList();
+      regenerate();
 
-  document.getElementById('bookmarklet-link').onclick = function(e) {
-    e.preventDefault();
-    alert('Drag this button to your bookmarks bar — don\'t click it here.');
-  };
-</script>
-</body>
+      document.getElementById("bookmarklet-link").onclick = function (e) {
+        e.preventDefault();
+        alert("Drag this button to your bookmarks bar — don't click it here.");
+      };
+    </script>
+  </body>
 </html>

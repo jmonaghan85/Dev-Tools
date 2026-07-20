@@ -11,7 +11,7 @@
         padding: 0;
       }
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         background: #f4f6f9;
         color: #1a1a1a;
         padding: 40px 20px;
@@ -281,30 +281,36 @@
     <div class="container">
       <h1>🧪 Experiment Bookmarklet</h1>
       <p class="subtitle">
-        A browser bookmarklet for overriding <code>?experiments=name:variant</code> on BBC web pages.
+        A browser bookmarklet for overriding
+        <code>?experiments=name:variant</code> on BBC web pages.
       </p>
 
       <div class="install-card">
         <h2>Installation</h2>
         <p class="instruction">
-          Drag the button below into your browser's bookmarks bar. If your bookmarks bar isn't visible, press
-          <strong>Cmd+Shift+B</strong> (Mac) or <strong>Ctrl+Shift+B</strong> (Windows) to show it.
+          Drag the button below into your browser's bookmarks bar. If your
+          bookmarks bar isn't visible, press
+          <strong>Cmd+Shift+B</strong> (Mac) or
+          <strong>Ctrl+Shift+B</strong> (Windows) to show it.
         </p>
         <a id="bookmarklet-link" href="#">⚗️ BBC Experiments</a>
         <p class="tip">
-          Drag this to your bookmarks bar ↑ &nbsp;|&nbsp; Click it on any BBC web page to open the experiment picker.
+          Drag this to your bookmarks bar ↑ &nbsp;|&nbsp; Click it on any BBC
+          web page to open the experiment picker.
         </p>
         <p class="tip" style="margin-top: 6px">
-          <strong>Features:</strong> pre-loaded experiments &amp; variants · custom experiment entry · active experiment
-          highlighted · <code>localStorage</code> saves your custom entries · clear button to remove the override.
+          <strong>Features:</strong> pre-loaded experiments &amp; variants ·
+          custom experiment entry · active experiment highlighted ·
+          <code>localStorage</code> saves your custom entries · clear button to
+          remove the override.
         </p>
       </div>
 
       <div class="experiments-card">
         <h2>Pre-loaded Experiments</h2>
         <p class="desc">
-          These are baked into the bookmarklet. Add extras below — they'll be saved in your browser and included next
-          time you regenerate the link.
+          These are baked into the bookmarklet. Add extras below — they'll be
+          saved in your browser and included next time you regenerate the link.
         </p>
 
         <div id="experiments-list"></div>
@@ -313,24 +319,40 @@
           <h3>Add an Experiment</h3>
           <div class="field">
             <label>Experiment Name</label>
-            <input id="new-exp-name" type="text" placeholder="e.g. newswb_my_experiment" spellcheck="false" />
+            <input
+              id="new-exp-name"
+              type="text"
+              placeholder="e.g. newswb_my_experiment"
+              spellcheck="false"
+            />
           </div>
           <div class="field">
             <label>Variants</label>
             <div class="variant-builder">
-              <input id="new-variant-input" type="text" placeholder="e.g. control" spellcheck="false" />
+              <input
+                id="new-variant-input"
+                type="text"
+                placeholder="e.g. control"
+                spellcheck="false"
+              />
               <button onclick="addVariantTag()">+ Add variant</button>
             </div>
             <div id="variant-tags-edit" class="variant-tags-edit">
-              <span class="no-variants-hint" id="no-variants-hint">No variants added yet</span>
+              <span class="no-variants-hint" id="no-variants-hint"
+                >No variants added yet</span
+              >
             </div>
           </div>
-          <button class="add-btn" onclick="addExperiment()">+ Save Experiment</button>
+          <button class="add-btn" onclick="addExperiment()">
+            + Save Experiment
+          </button>
         </div>
 
         <p class="regen-notice">
           After adding experiments, regenerate the bookmarklet link:
-          <button class="regen-btn" onclick="regenerate()">↻ Regenerate link</button>
+          <button class="regen-btn" onclick="regenerate()">
+            ↻ Regenerate link
+          </button>
         </p>
       </div>
     </div>
@@ -340,10 +362,10 @@
       var DEFAULT_EXPERIMENTS = {};
 
       // Merge with any extras saved in this page's localStorage
-      var STORAGE_KEY = '__exp_bookmarklet_page__';
+      var STORAGE_KEY = "__exp_bookmarklet_page__";
       function loadExtras() {
         try {
-          return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
         } catch (e) {
           return {};
         }
@@ -358,25 +380,25 @@
 
       // ─── Render the experiment list ───────────────────────────────────────────────
       function renderList() {
-        var list = document.getElementById('experiments-list');
-        list.innerHTML = '';
+        var list = document.getElementById("experiments-list");
+        list.innerHTML = "";
         var exps = allExperiments();
         var extras = loadExtras();
         Object.keys(exps)
           .sort()
           .forEach(function (name) {
-            var row = document.createElement('div');
-            row.className = 'experiment-row';
+            var row = document.createElement("div");
+            row.className = "experiment-row";
 
-            var nameEl = document.createElement('div');
-            nameEl.className = 'exp-name';
+            var nameEl = document.createElement("div");
+            nameEl.className = "exp-name";
             nameEl.textContent = name;
 
-            var variantsEl = document.createElement('div');
-            variantsEl.className = 'variants-list';
+            var variantsEl = document.createElement("div");
+            variantsEl.className = "variants-list";
             (exps[name] || []).forEach(function (v) {
-              var tag = document.createElement('span');
-              tag.className = 'variant-tag';
+              var tag = document.createElement("span");
+              tag.className = "variant-tag";
               tag.textContent = v;
               variantsEl.appendChild(tag);
             });
@@ -386,10 +408,10 @@
 
             // Only allow deleting custom extras
             if (extras[name]) {
-              var del = document.createElement('button');
-              del.className = 'delete-exp';
-              del.textContent = '×';
-              del.title = 'Remove custom experiment';
+              var del = document.createElement("button");
+              del.className = "delete-exp";
+              del.textContent = "×";
+              del.title = "Remove custom experiment";
               del.onclick = (function (n) {
                 return function () {
                   var e = loadExtras();
@@ -410,31 +432,35 @@
       var pendingVariants = [];
 
       function renderVariantTags() {
-        var container = document.getElementById('variant-tags-edit');
-        var hint = document.getElementById('no-variants-hint');
-        container.innerHTML = '';
+        var container = document.getElementById("variant-tags-edit");
+        var hint = document.getElementById("no-variants-hint");
+        container.innerHTML = "";
         if (!pendingVariants.length) {
           container.appendChild(hint);
           return;
         }
         pendingVariants.forEach(function (v, i) {
-          var tag = document.createElement('span');
-          tag.className = 'variant-tag-edit';
-          tag.innerHTML = v + ' <button title="Remove" onclick="removeVariantTag(' + i + ')">&times;</button>';
+          var tag = document.createElement("span");
+          tag.className = "variant-tag-edit";
+          tag.innerHTML =
+            v +
+            ' <button title="Remove" onclick="removeVariantTag(' +
+            i +
+            ')">&times;</button>';
           container.appendChild(tag);
         });
       }
 
       function addVariantTag() {
-        var input = document.getElementById('new-variant-input');
+        var input = document.getElementById("new-variant-input");
         var val = input.value.trim();
         if (!val) return;
         if (pendingVariants.includes(val)) {
-          input.value = '';
+          input.value = "";
           return;
         }
         pendingVariants.push(val);
-        input.value = '';
+        input.value = "";
         input.focus();
         renderVariantTags();
       }
@@ -445,30 +471,32 @@
       }
 
       // Allow pressing Enter in the variant input to add a tag
-      document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('new-variant-input').addEventListener('keydown', function (e) {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            addVariantTag();
-          }
-        });
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("new-variant-input")
+          .addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              addVariantTag();
+            }
+          });
       });
 
       function addExperiment() {
-        var nameInput = document.getElementById('new-exp-name');
+        var nameInput = document.getElementById("new-exp-name");
         var name = nameInput.value.trim();
 
         if (!name) {
-          alert('Please enter an experiment name.');
+          alert("Please enter an experiment name.");
           return;
         }
         if (!pendingVariants.length) {
-          alert('Please add at least one variant.');
+          alert("Please add at least one variant.");
           return;
         }
         if (!/^[a-z][a-z0-9_-]*$/.test(name)) {
           alert(
-            'Experiment name must start with a lowercase letter and contain only lowercase letters, numbers, underscores and hyphens.'
+            "Experiment name must start with a lowercase letter and contain only lowercase letters, numbers, underscores and hyphens.",
           );
           return;
         }
@@ -476,7 +504,7 @@
         var extras = loadExtras();
         extras[name] = pendingVariants.slice();
         saveExtras(extras);
-        nameInput.value = '';
+        nameInput.value = "";
         pendingVariants = [];
         renderVariantTags();
         renderList();
@@ -488,29 +516,32 @@
         var expJson = JSON.stringify(experiments);
 
         var src = [
-          '(function(){',
+          "(function(){",
           'var ex=document.getElementById("__exp_bm__");',
-          'if(ex){ex.remove();return;}',
-          'var D=',
+          "if(ex){ex.remove();return;}",
+          "var D=",
           expJson,
-          ';',
-          'try{var sv=JSON.parse(localStorage.getItem("__exp_bookmarklet__")||"{}");Object.assign(D,sv);}catch(e){}',
-          'var u=new URL(window.location.href),',
+          ";",
+          'function _ckD(){var h=window.location.hostname,p=h.split("."),n=p.length;if(n<2)return h;if(/\.(co|org|net|gov|edu|com)\.(uk|au|nz|jp|za|br|in|il|hk)$/.test(h)&&n>=4)return"."+p.slice(-3).join(".");return"."+p.slice(-2).join(".");}',
+          'function _ckR(){try{var m=document.cookie.match(/(^|; )__exp_bookmarklet__=([^;]*)/);if(m)return JSON.parse(decodeURIComponent(m[2]));var ls=localStorage.getItem("__exp_bookmarklet__");return ls?JSON.parse(ls):null;}catch(e){return null;}}',
+          'function _ckW(o){try{var s=JSON.stringify(o);document.cookie="__exp_bookmarklet__="+encodeURIComponent(s)+"; domain="+_ckD()+"; path=/; max-age=31536000; SameSite=Lax";localStorage.setItem("__exp_bookmarklet__",s);}catch(e){}}',
+          "try{var sv=_ckR();if(sv){_ckW(sv);Object.assign(D,sv);}}catch(e){}",
+          "var u=new URL(window.location.href),",
           'cur=u.searchParams.get("experiments")||"",',
           'cE=cur.split(":")[0],cV=cur.split(":")[1];',
 
           // ── Helpers ──
-          'function mk(tag,css){var e=document.createElement(tag);if(css)e.style.cssText=css;return e;}',
+          "function mk(tag,css){var e=document.createElement(tag);if(css)e.style.cssText=css;return e;}",
           'function lbl(t){var l=mk("label","display:block;font-size:11px;font-weight:700;color:#666;margin-bottom:4px;margin-top:14px;text-transform:uppercase;letter-spacing:.05em");l.textContent=t;return l;}',
           'var selCss="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:5px;font-size:14px;box-sizing:border-box;background:#fff";',
           'var inpCss=selCss+";margin-top:6px";',
           'function btn(t,bg,fg,extra){var b=mk("button","flex:1;padding:10px 6px;background:"+bg+";color:"+fg+";border:none;border-radius:5px;font-size:13px;font-weight:700;cursor:pointer"+(extra?";"+extra:""));b.textContent=t;return b;}',
-          'function loadSaved(){try{return JSON.parse(localStorage.getItem("__exp_bookmarklet__")||"{}");}catch(e){return{};}}',
-          'function saveSaved(o){try{localStorage.setItem("__exp_bookmarklet__",JSON.stringify(o));}catch(e){}}',
+          "function loadSaved(){return _ckR()||{};}",
+          "function saveSaved(o){_ckW(o);}",
           'function loadHidden(){try{return JSON.parse(localStorage.getItem("__exp_bookmarklet_hidden__")||"[]");}catch(e){return[];}}',
           'function saveHidden(a){try{localStorage.setItem("__exp_bookmarklet_hidden__",JSON.stringify(a));}catch(e){}}',
           // Filter out any previously hidden (deleted) experiments
-          'loadHidden().forEach(function(n){delete D[n];});',
+          "loadHidden().forEach(function(n){delete D[n];});",
 
           // ── Overlay + modal ──
           'var ov=mk("div","position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:2147483647;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif");',
@@ -521,7 +552,7 @@
           'var hd=mk("div","display:flex;align-items:center;justify-content:space-between;margin-bottom:16px");',
           'var ti=mk("h2","margin:0;font-size:17px;font-weight:700");ti.textContent="\u{1F9EA} Experiment Override";',
           'var cl=mk("button","background:none;border:none;font-size:20px;cursor:pointer;color:#888;line-height:1;padding:0 4px");cl.textContent="\u2715";cl.onclick=function(){ov.remove();};',
-          'hd.appendChild(ti);hd.appendChild(cl);',
+          "hd.appendChild(ti);hd.appendChild(cl);",
 
           // ════════════════════════════════════════
           // ── PANEL 1: picker ──
@@ -529,74 +560,74 @@
           'var p1=mk("div");',
 
           // Active badge
-          'if(cur){',
+          "if(cur){",
           'var sb=mk("div","background:#f0f7ff;border:1px solid #b3d4ff;border-radius:4px;padding:7px 12px;margin-bottom:14px;font-size:12px;color:#0062cc;word-break:break-all");',
           'sb.innerHTML="<strong>Active:</strong> "+cur;',
-          'p1.appendChild(sb);}',
+          "p1.appendChild(sb);}",
 
           // Search + experiment select
           'var srch=mk("input","width:100%;padding:7px 10px;border:1px solid #ccc;border-radius:5px;font-size:13px;box-sizing:border-box;background:#fff;margin-top:6px");',
           'srch.placeholder="Search experiments\u2026";srch.spellcheck=false;',
           'var eS=mk("select",selCss+";margin-top:6px");',
-          'function rebuildExpSelect(selectName,filter){',
-          'var f=(filter!==undefined?filter:srch.value).toLowerCase();',
+          "function rebuildExpSelect(selectName,filter){",
+          "var f=(filter!==undefined?filter:srch.value).toLowerCase();",
           'var prev=selectName!=null?selectName:(eS.value&&eS.value!=="__c__"?eS.value:cE);',
           'eS.innerHTML="";',
-          'Object.keys(D).sort().filter(function(n){return !f||n.toLowerCase().indexOf(f)>-1;}).forEach(function(n){',
+          "Object.keys(D).sort().filter(function(n){return !f||n.toLowerCase().indexOf(f)>-1;}).forEach(function(n){",
           'var o=document.createElement("option");o.value=n;o.textContent=n;',
-          'if(n===prev)o.selected=true;',
-          'eS.appendChild(o);',
-          '});',
+          "if(n===prev)o.selected=true;",
+          "eS.appendChild(o);",
+          "});",
           'var cO=document.createElement("option");cO.value="__c__";cO.textContent="+ Add new experiment";eS.appendChild(cO);',
           'if(typeof vS!=="undefined"&&vS&&eS.value&&eS.value!=="__c__")fillV(eS.value);',
-          '}',
-          'srch.oninput=function(){rebuildExpSelect(null,srch.value);};',
-          'rebuildExpSelect();',
+          "}",
+          "srch.oninput=function(){rebuildExpSelect(null,srch.value);};",
+          "rebuildExpSelect();",
 
           // Variant select + custom input
           'var vS=mk("select",selCss);',
           'var vI=mk("input",inpCss);vI.placeholder="Variant name\u2026";vI.style.display="none";',
-          'function fillV(n){',
+          "function fillV(n){",
           'vS.innerHTML="";',
           '(D[n]||[]).forEach(function(v){var o=document.createElement("option");o.value=v;o.textContent=v;if(v===cV)o.selected=true;vS.appendChild(o);});',
           'var co=document.createElement("option");co.value="__c__";co.textContent="\u2500\u2500 Enter custom \u2500\u2500";vS.appendChild(co);',
           'vI.style.display="none";',
-          '}',
-          'fillV(cE||Object.keys(D).sort()[0]);',
-          'eS.onchange=function(){',
+          "}",
+          "fillV(cE||Object.keys(D).sort()[0]);",
+          "eS.onchange=function(){",
           'if(eS.value==="__c__"){',
           'rebuildExpSelect(Object.keys(D).sort()[0],"");',
           'p1.style.display="none";p2.style.display="block";',
           'ti.textContent="\u{1F9EA} Manage Experiments";',
-          'renderManageList();nI.focus();',
-          '}else{fillV(eS.value);}',
-          '};',
+          "renderManageList();nI.focus();",
+          "}else{fillV(eS.value);}",
+          "};",
           'vS.onchange=function(){vI.style.display=vS.value==="__c__"?"block":"none";};',
 
           // Action buttons
           'var br=mk("div","display:flex;gap:8px;margin-top:18px");',
           'var aB=btn("Apply","#0062cc","#fff");',
-          'aB.onclick=function(){',
-          'var en=eS.value;',
+          "aB.onclick=function(){",
+          "var en=eS.value;",
           'var vn=vS.value==="__c__"?vI.value.trim():vS.value;',
           'if(!en||en==="__c__"||!vn){alert("Select an experiment and variant.");return;}',
           'var u2=new URL(window.location.href);u2.searchParams.set("experiments",en+":"+vn);window.location.href=u2.toString();',
-          '};',
+          "};",
           'var rB=btn("Remove","#dc3545","#fff");',
           'rB.onclick=function(){var u2=new URL(window.location.href);u2.searchParams.delete("experiments");window.location.href=u2.toString();};',
           'var xB=btn("Close","#f1f3f5","#333","border:1px solid #ddd");xB.onclick=function(){ov.remove();};',
-          'br.appendChild(aB);br.appendChild(rB);br.appendChild(xB);',
+          "br.appendChild(aB);br.appendChild(rB);br.appendChild(xB);",
 
           // "Manage experiments" link at bottom of panel 1
           'var addLink=mk("div","margin-top:14px;text-align:center;border-top:1px solid #f0f0f0;padding-top:12px");',
           'var addA=mk("a","font-size:12px;color:#0062cc;cursor:pointer;text-decoration:none");',
           'addA.textContent="\u2699\uFE0F Manage experiments";',
-          'addLink.appendChild(addA);',
+          "addLink.appendChild(addA);",
 
           'p1.appendChild(lbl("Experiment"));p1.appendChild(srch);p1.appendChild(eS);',
           'p1.appendChild(lbl("Variant"));p1.appendChild(vS);p1.appendChild(vI);',
-          'p1.appendChild(br);',
-          'p1.appendChild(addLink);',
+          "p1.appendChild(br);",
+          "p1.appendChild(addLink);",
 
           // ════════════════════════════════════════
           // ── PANEL 2: manage (list + add form) ──
@@ -607,15 +638,15 @@
           'var backRow=mk("div","margin-bottom:16px");',
           'var backA=mk("a","font-size:13px;color:#0062cc;cursor:pointer;text-decoration:none");',
           'backA.textContent="\u2190 Back";',
-          'backRow.appendChild(backA);',
+          "backRow.appendChild(backA);",
 
           // ── Experiment list ──
           'var expList=mk("div","max-height:200px;overflow-y:auto;margin-bottom:4px");',
-          'function renderManageList(){',
+          "function renderManageList(){",
           'expList.innerHTML="";',
-          'var names=Object.keys(D).sort();',
+          "var names=Object.keys(D).sort();",
           'if(!names.length){var em=mk("div","font-size:13px;color:#aaa;padding:8px 0;font-style:italic");em.textContent="No experiments in list.";expList.appendChild(em);return;}',
-          'names.forEach(function(n){',
+          "names.forEach(function(n){",
           'var row=mk("div","display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f5f5f5");',
           'var nameEl=mk("span","flex:1;font-size:12px;font-family:monospace;color:#333;word-break:break-all");nameEl.textContent=n;',
           'var cnt=mk("span","font-size:11px;color:#aaa;white-space:nowrap");cnt.textContent=(D[n]||[]).length+" var";',
@@ -623,91 +654,91 @@
           'dBtn.textContent="\u00d7";dBtn.title="Remove experiment";',
           'dBtn.onmouseover=function(){this.style.color="#dc3545";};',
           'dBtn.onmouseout=function(){this.style.color="#ddd";};',
-          'dBtn.onclick=(function(nm){return function(){',
-          'delete D[nm];',
-          'var sv2=loadSaved();if(sv2[nm]){delete sv2[nm];saveSaved(sv2);}',
-          'var hid=loadHidden();if(!hid.includes(nm)){hid.push(nm);saveHidden(hid);}',
-          'rebuildExpSelect(Object.keys(D).sort()[0]);',
+          "dBtn.onclick=(function(nm){return function(){",
+          "delete D[nm];",
+          "var sv2=loadSaved();if(sv2[nm]){delete sv2[nm];saveSaved(sv2);}",
+          "var hid=loadHidden();if(!hid.includes(nm)){hid.push(nm);saveHidden(hid);}",
+          "rebuildExpSelect(Object.keys(D).sort()[0]);",
           'fillV(Object.keys(D).sort()[0]||"");',
-          'renderManageList();',
-          '}})(n);',
-          'row.appendChild(nameEl);row.appendChild(cnt);row.appendChild(dBtn);',
-          'expList.appendChild(row);',
-          '});',
-          '}',
+          "renderManageList();",
+          "}})(n);",
+          "row.appendChild(nameEl);row.appendChild(cnt);row.appendChild(dBtn);",
+          "expList.appendChild(row);",
+          "});",
+          "}",
 
           // ── Add experiment form ──
           'var divider=mk("div","border-top:2px solid #f0f0f0;margin:16px 0");',
           'var nI=mk("input",inpCss);nI.placeholder="e.g. newswb_my_experiment";nI.style.display="block";nI.spellcheck=false;',
           'var vBI=mk("input",inpCss);vBI.placeholder="e.g. control";vBI.style.display="block";vBI.spellcheck=false;',
           'var vBrow=mk("div","display:flex;gap:6px;align-items:center;margin-top:6px");',
-          'vBrow.appendChild(vBI);',
+          "vBrow.appendChild(vBI);",
           'var vBbtn=mk("button","padding:8px 12px;background:#6c757d;color:#fff;border:none;border-radius:5px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap");',
           'vBbtn.textContent="+ Add";',
-          'vBrow.appendChild(vBbtn);',
+          "vBrow.appendChild(vBbtn);",
           'var tagsDiv=mk("div","display:flex;flex-wrap:wrap;gap:6px;min-height:24px;margin-top:10px;margin-bottom:4px");',
           'var noTagHint=mk("span","font-size:12px;color:#bbb;font-style:italic");noTagHint.textContent="No variants added yet";',
-          'tagsDiv.appendChild(noTagHint);',
-          'var pV=[];',
-          'function renderTags(){',
+          "tagsDiv.appendChild(noTagHint);",
+          "var pV=[];",
+          "function renderTags(){",
           'tagsDiv.innerHTML="";',
-          'if(!pV.length){tagsDiv.appendChild(noTagHint);return;}',
-          'pV.forEach(function(v,i){',
+          "if(!pV.length){tagsDiv.appendChild(noTagHint);return;}",
+          "pV.forEach(function(v,i){",
           'var tg=mk("span","display:inline-flex;align-items:center;gap:4px;background:#f0f7ff;border:1px solid #b3d4ff;color:#0062cc;padding:3px 8px;border-radius:12px;font-size:12px;font-family:monospace");',
-          'tg.textContent=v;',
+          "tg.textContent=v;",
           'var rm=mk("button","background:none;border:none;cursor:pointer;color:#88aadd;font-size:13px;line-height:1;padding:0 0 0 4px");rm.textContent="\u00d7";',
-          'rm.onclick=(function(idx){return function(){pV.splice(idx,1);renderTags();};})(i);',
-          'tg.appendChild(rm);tagsDiv.appendChild(tg);',
-          '});',
-          '}',
+          "rm.onclick=(function(idx){return function(){pV.splice(idx,1);renderTags();};})(i);",
+          "tg.appendChild(rm);tagsDiv.appendChild(tg);",
+          "});",
+          "}",
           'function doAddTag(){var v=vBI.value.trim();if(!v)return;if(!pV.includes(v))pV.push(v);vBI.value="";vBI.focus();renderTags();}',
-          'vBbtn.onclick=doAddTag;',
+          "vBbtn.onclick=doAddTag;",
           'vBI.onkeydown=function(e){if(e.key==="Enter"){e.preventDefault();doAddTag();}};',
           'var saveBtn=btn("Save Experiment","#28a745","#fff");',
           'var p2br=mk("div","display:flex;gap:8px;margin-top:14px");',
-          'p2br.appendChild(saveBtn);',
-          'saveBtn.onclick=function(){',
-          'var name=nI.value.trim();',
+          "p2br.appendChild(saveBtn);",
+          "saveBtn.onclick=function(){",
+          "var name=nI.value.trim();",
           'if(!name){alert("Enter an experiment name.");return;}',
           'if(!/^[a-z][a-z0-9_-]*$/.test(name)){alert("Name must start with a lowercase letter and contain only lowercase letters, numbers, _ or -.");return;}',
           'if(!pV.length){alert("Add at least one variant.");return;}',
-          'var sv2=loadSaved();sv2[name]=pV.slice();saveSaved(sv2);',
+          "var sv2=loadSaved();sv2[name]=pV.slice();saveSaved(sv2);",
           // Also remove from hidden if it was previously deleted
-          'var hid=loadHidden();var hi=hid.indexOf(name);if(hi>-1){hid.splice(hi,1);saveHidden(hid);}',
-          'D[name]=pV.slice();',
+          "var hid=loadHidden();var hi=hid.indexOf(name);if(hi>-1){hid.splice(hi,1);saveHidden(hid);}",
+          "D[name]=pV.slice();",
           'srch.value="";rebuildExpSelect(name,"");',
           'nI.value="";pV=[];renderTags();',
-          'renderManageList();',
-          '};',
+          "renderManageList();",
+          "};",
 
           // Assemble panel 2
-          'p2.appendChild(backRow);',
+          "p2.appendChild(backRow);",
           'p2.appendChild(lbl("All Experiments"));p2.appendChild(expList);',
-          'p2.appendChild(divider);',
+          "p2.appendChild(divider);",
           'p2.appendChild(lbl("Add New Experiment"));',
-          'p2.appendChild(nI);',
+          "p2.appendChild(nI);",
           'p2.appendChild(lbl("Variants"));p2.appendChild(vBrow);p2.appendChild(tagsDiv);',
-          'p2.appendChild(p2br);',
+          "p2.appendChild(p2br);",
 
           // ── Panel-switch logic ──
           'addA.onclick=function(){p1.style.display="none";p2.style.display="block";ti.textContent="\u{1F9EA} Manage Experiments";renderManageList();nI.focus();};',
           'backA.onclick=function(){p2.style.display="none";p1.style.display="block";ti.textContent="\u{1F9EA} Experiment Override";srch.value="";rebuildExpSelect();};',
 
           // ── Assemble modal ──
-          'md.appendChild(hd);md.appendChild(p1);md.appendChild(p2);',
-          'ov.appendChild(md);',
-          'ov.onclick=function(ev){if(ev.target===ov)ov.remove();};',
-          'document.body.appendChild(ov);',
-          'eS.focus();',
-          '})()'
-        ].join('');
+          "md.appendChild(hd);md.appendChild(p1);md.appendChild(p2);",
+          "ov.appendChild(md);",
+          "ov.onclick=function(ev){if(ev.target===ov)ov.remove();};",
+          "document.body.appendChild(ov);",
+          "eS.focus();",
+          "})()",
+        ].join("");
 
-        return 'javascript:' + encodeURIComponent(src);
+        return "javascript:" + encodeURIComponent(src);
       }
 
       // ─── Wire up the bookmarklet link ─────────────────────────────────────────────
       function regenerate() {
-        var link = document.getElementById('bookmarklet-link');
+        var link = document.getElementById("bookmarklet-link");
         link.href = buildBookmarklet(allExperiments());
       }
 
@@ -716,9 +747,11 @@
       regenerate();
 
       // Prevent click navigation (it should only be dragged)
-      document.getElementById('bookmarklet-link').onclick = function (e) {
+      document.getElementById("bookmarklet-link").onclick = function (e) {
         e.preventDefault();
-        alert("Drag this button to your bookmarks bar to install it — don't click it here.");
+        alert(
+          "Drag this button to your bookmarks bar to install it — don't click it here.",
+        );
       };
     </script>
   </body>
