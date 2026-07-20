@@ -729,7 +729,7 @@
           "ov.appendChild(md);",
           "ov.onclick=function(ev){if(ev.target===ov)ov.remove();};",
           "document.body.appendChild(ov);",
-          "eS.focus();",
+          "if(!Object.keys(D).length){p1.style.display='none';p2.style.display='block';ti.textContent='\u{1F9EA} Manage Experiments';renderManageList();nI.focus();}else{eS.focus();}",
           "})()",
         ].join("");
 
